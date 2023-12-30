@@ -2,16 +2,26 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/malinatrash/insta-rest-api/config"
+	"github.com/malinatrash/insta-rest-api/database"
+	"github.com/malinatrash/insta-rest-api/models"
 	"github.com/malinatrash/insta-rest-api/routers"
 )
 
 func main() {
-	r := gin.Default()
+	db, err := database.ConnectDB(config.DB_HOST, config.DB_USER, config.DB_PASSWORD, config.DB_NAME)
+	if err != nil {
+		panic("Failed to connect to database!")
+	}
 
-	// Инициализация роутера
-	routers.SetupRoutes(r)
+	err = db.AutoMigrate(&models.User{})
+	if err != nil {
+		return
+	}
 
-	if err := r.Run(":8000"); err != nil {
+	router := gin.Default()
+	routers.SetupRoutes(router)
+	if err := router.Run(":8000"); err != nil {
 		panic(err)
 	}
 }
