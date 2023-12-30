@@ -8,6 +8,5 @@ import (
 func SetupImageRoutes(r *gin.Engine) {
 	imageRoutes := r.Group("/image")
 	imageRoutes.GET("/", controllers.GetImageForUser)
-	imageRoutes.POST("/", controllers.CreateImage)
-
+	imageRoutes.POST("/", controllers.UploadImageForUser)
 }

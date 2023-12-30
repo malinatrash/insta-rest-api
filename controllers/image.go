@@ -2,68 +2,96 @@ package controllers
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func saveImage(c *gin.Context, file *multipart.FileHeader) (string, error) {
-	imageName := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(file.Filename))
-	uploadPath := "../assets/"
-	dst := filepath.Join(uploadPath, imageName)
-	if err := c.SaveUploadedFile(file, dst); err != nil {
+
+
+func findFileByNameWithoutExtension(directoryPath, fileName string) (string, error) {
+	files, err := os.ReadDir(directoryPath)
+	if err != nil {
 		return "", err
 	}
-	return imageName, nil
-}
 
-func CreateImage(c *gin.Context) {
-	file, err := c.FormFile("image")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	fmt.Println(fileName)
+	for _, file := range files {
+		fmt.Println(file.Name())
+		nameWithoutExt := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+		if nameWithoutExt == fileName {
+			return filepath.Join(directoryPath, file.Name()), nil
+		}
 	}
 
-	imageName, err := saveImage(c, file)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"image_name": imageName})
+	return "", fmt.Errorf("File not found: %s", fileName)
 }
 
 func GetImageForUser(c *gin.Context) {
-	imageName := c.Param("username")
-	imagePath := "../assets/"
-	listFilesInDirectory("../assets")
-
-	if _, err := os.Stat(filepath.Join(imagePath, imageName)); os.IsNotExist(err) {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Image not found"})
+	imageName := c.Query("username")
+	imagePath := "./assets/"
+	if imageName == "" {
+		c.JSON(404, gin.H{"error": "username required"})
 		return
 	}
+	
+	foundImagePath, err := findFileByNameWithoutExtension(imagePath, imageName)
 
-	c.File(filepath.Join(imagePath, imageName))
-}
-
-func listFilesInDirectory(directoryPath string) {
-	files, err := ioutil.ReadDir(directoryPath)
 	if err != nil {
-		log.Fatal(err)
+			c.JSON(http.StatusNotFound, gin.H{"error": "Image not found"})
+			return
 	}
 
-	fmt.Println("Files in", directoryPath)
-	for _, file := range files {
-		if file.IsDir() {
-			fmt.Println("Directory:", file.Name())
-		} else {
-			fmt.Println("File:", file.Name())
-		}
-	}
+	c.File(foundImagePath)
 }
+func UploadImageForUser(c *gin.Context) {
+	file, err := c.FormFile("image")
+	if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Image not found in request"})
+			return
+	}
+
+	username := c.PostForm("username")
+	if username == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Username not provided"})
+			return
+	}
+
+	imagePath := "./assets/" + username + filepath.Ext(file.Filename)
+
+	if err := deleteFileByNameWithoutExtension("./assets/", username); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete existing image"})
+			return
+	}
+
+	if err := c.SaveUploadedFile(file, imagePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Image uploaded successfully"})
+}
+
+func deleteFileByNameWithoutExtension(directoryPath, fileName string) error {
+	files, err := os.ReadDir(directoryPath)
+	if err != nil {
+			return err
+	}
+
+	for _, file := range files {
+			nameWithoutExt := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+			if nameWithoutExt == fileName {
+					err := os.Remove(filepath.Join(directoryPath, file.Name()))
+					if err != nil {
+							return err
+					}
+			}
+	}
+
+	return nil
+}
+
+
