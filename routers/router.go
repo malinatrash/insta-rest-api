@@ -8,5 +8,6 @@ import (
 
 func SetupRoutes(r *gin.Engine) {
 	SetupUserRoutes(r)
+	SetupImageRoutes(r)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
