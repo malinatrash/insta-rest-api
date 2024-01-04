@@ -1,4 +1,27 @@
+basePath: /
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: http://92.51.45.202:8000/
 info:
   contact: {}
-paths: {}
+  description: Insta rest api
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /users/{id}/caption:
+    post:
+      consumes:
+      - application/json
+      description: Метод позволяет добавить или обновить подпись пользователя.
+      produces:
+      - application/json
+      responses: {}
+      summary: Добавление или обновление подписи пользователя
+      tags:
+      - Users
+securityDefinitions:
+  BasicAuth:
+    type: basic
 swagger: "2.0"
