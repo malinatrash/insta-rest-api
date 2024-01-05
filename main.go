@@ -9,18 +9,12 @@ import (
 	"github.com/malinatrash/insta-rest-api/routers"
 )
 
-// @title           Swagger Example API
-// @version         1.0
-// @description     Insta rest api
-// @termsOfService  http://swagger.io/terms/
-
-// @host      http://92.51.45.202:8000/
+// @title           insta REST API
+// @version         0.0.1
+// @description     Веб сервер для нашего клона инсты
+// @host      92.51.45.202:8000
 // @BasePath  /
 
-// @securityDefinitions.basic  BasicAuth
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	db, err := database.ConnectDB(config.DB_HOST, config.DB_USER, config.DB_PASSWORD, config.DB_NAME)
 	if err != nil {

@@ -1,27 +1,198 @@
 basePath: /
-externalDocs:
-  description: OpenAPI
-  url: https://swagger.io/resources/open-api/
-host: http://92.51.45.202:8000/
+definitions:
+  models.ErrorMessage:
+    properties:
+      error:
+        type: string
+    type: object
+  models.SuccessMessage:
+    properties:
+      message:
+        type: string
+    type: object
+  models.User:
+    properties:
+      caption:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: 92.51.45.202:8000
 info:
   contact: {}
-  description: Insta rest api
-  termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
-  version: "1.0"
+  description: Веб сервер для нашего клона инсты
+  title: insta REST API
+  version: 0.0.1
 paths:
-  /users/{id}/caption:
+  /users/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: Получить всех пользователей
+      tags:
+      - users
     post:
       consumes:
       - application/json
-      description: Метод позволяет добавить или обновить подпись пользователя.
+      description: Создает нового пользователя с предоставленными данными
+      parameters:
+      - description: Объект пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
-      responses: {}
-      summary: Добавление или обновление подписи пользователя
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Создать нового пользователя
       tags:
-      - Users
-securityDefinitions:
-  BasicAuth:
-    type: basic
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет пользователя по его ID
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Удалить пользователя по ID
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Получить пользователя по его ID
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Получить пользователя по ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные существующего пользователя по его ID
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Обновленный объект пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Обновить данные пользователя
+      tags:
+      - users
+  /users/login:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Имя пользователя
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: Пароль
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Получить пользователя по имени пользователя и паролю
+      tags:
+      - users
 swagger: "2.0"

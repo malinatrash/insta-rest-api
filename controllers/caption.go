@@ -9,13 +9,6 @@ import (
 	"github.com/malinatrash/insta-rest-api/models"
 )
 
-// AddCaption добавляет или обновляет подпись пользователя по заданному идентификатору пользователя.
-// @Summary Добавление или обновление подписи пользователя
-// @Description Метод позволяет добавить или обновить подпись пользователя.
-// @Tags Users
-// @Accept json
-// @Produce json
-// @Router /users/{id}/caption [post]
 func AddCaption(c *gin.Context) {
 	userID := c.Param("id")
 
