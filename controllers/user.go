@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,24 +34,25 @@ func GetAllUsers(c *gin.Context) {
 // @Failure 400 {object} models.ErrorMessage
 // @Failure 404 {object} models.ErrorMessage
 // @Router /users/login [get]
-func GetUserByUsernameAndPassword(c *gin.Context) {
-	username := c.Query("username")
-	password := c.Query("password")
+func GetUserBySession(c *gin.Context) {
+	session := c.Query("session")
+
+	var needSession models.Session
+	result := database.DB.Where("session = ?", session).First(&needSession)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Сессии не существует"})
+		return
+	}
 
 	var user models.User
-	result := database.DB.Where("username = ? AND password = ?", username, password).First(&user)
+	result = database.DB.Where("ID = ?", needSession.UserRefer).First(&user)
 	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Неправильное имя пользователя или пароль"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при поиске пользователя"})
 		return
 	}
-
-	if user.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Пользователь не найден"})
-		return
-	}
+	fmt.Println(user)
 
 	c.JSON(http.StatusOK, user)
-
 }
 
 // GetUserByID возвращает пользователя по ID
@@ -102,7 +104,9 @@ func CreateUser(c *gin.Context) {
 	}
 
 	database.DB.Create(&newUser)
-	c.JSON(201, newUser)
+	session := CreateSession(newUser)
+	database.DB.Create(&session)
+	c.JSON(201, session.Session)
 }
 
 // UpdateUser обновляет данные пользователя по ID

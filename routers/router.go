@@ -5,7 +5,8 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine) {
-	SetupSwaggerRoute(r)
+	SetupSwaggerRouter(r)
 	SetupUserRoutes(r)
 	SetupImageRoutes(r)
+	SetupSessionRoutes(r)
 }

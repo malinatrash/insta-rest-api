@@ -6,6 +6,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func SetupSwaggerRoute(r *gin.Engine) {
+func SetupSwaggerRouter(r *gin.Engine) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
