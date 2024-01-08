@@ -23,13 +23,12 @@ func GetAllUsers(c *gin.Context) {
 	c.JSON(200, users)
 }
 
-// GetUserByUsernameAndPassword возвращает пользователя по имени пользователя и паролю
-// @Summary Получить пользователя по имени пользователя и паролю
+// GetUserByUsernameAndPassword возвращает пользователя по id сессии
+// @Summary Получить пользователя по id сессии
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param username query string true "Имя пользователя"
-// @Param password query string true "Пароль"
+// @Param session query string true "id сессии"
 // @Success 200 {object} models.User
 // @Failure 400 {object} models.ErrorMessage
 // @Failure 404 {object} models.ErrorMessage

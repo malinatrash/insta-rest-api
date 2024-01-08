@@ -1,8 +1,18 @@
 basePath: /
 definitions:
+  models.CaptionData:
+    properties:
+      caption:
+        type: string
+    type: object
   models.ErrorMessage:
     properties:
       error:
+        type: string
+    type: object
+  models.SessionResponse:
+    properties:
+      session:
         type: string
     type: object
   models.SuccessMessage:
@@ -32,6 +42,39 @@ info:
   title: insta REST API
   version: 0.0.1
 paths:
+  /session:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Имя пользователя
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: Пароль
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SessionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Получить пользователя по имени пользователя и паролю
+      tags:
+      - sessions
   /users/:
     get:
       produces:
@@ -162,19 +205,53 @@ paths:
       summary: Обновить данные пользователя
       tags:
       - users
+  /users/caption/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Этот эндпоинт позволяет добавлять или обновлять описание пользователя.
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления подписи
+        in: body
+        name: models.captionData
+        required: true
+        schema:
+          $ref: '#/definitions/models.CaptionData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessMessage'
+        "400":
+          description: Invalid JSON data
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+        "500":
+          description: Failed to update user
+          schema:
+            $ref: '#/definitions/models.ErrorMessage'
+      summary: Добавляет или обновляет описание пользователя.
+      tags:
+      - users
   /users/login:
     get:
       consumes:
       - application/json
       parameters:
-      - description: Имя пользователя
+      - description: id сессии
         in: query
-        name: username
-        required: true
-        type: string
-      - description: Пароль
-        in: query
-        name: password
+        name: session
         required: true
         type: string
       produces:
@@ -192,7 +269,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/models.ErrorMessage'
-      summary: Получить пользователя по имени пользователя и паролю
+      summary: Получить пользователя по id сессии
       tags:
       - users
 swagger: "2.0"

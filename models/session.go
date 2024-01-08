@@ -9,3 +9,7 @@ type Session struct {
 	UserRefer      int
 	User           User `gorm:"foreignKey:UserRefer"`
 }
+
+type SessionResponse struct {
+	Session string `json:"session"`
+}

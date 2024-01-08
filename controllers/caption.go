@@ -9,6 +9,19 @@ import (
 	"github.com/malinatrash/insta-rest-api/models"
 )
 
+// AddCaption добавляет или обновляет описание пользователя.
+// @Summary Добавляет или обновляет описание пользователя.
+// @Description Этот эндпоинт позволяет добавлять или обновлять описание пользователя.
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "ID пользователя"
+// @Param models.captionData body models.CaptionData true "Данные для обновления подписи"
+// @Success 200 {object} models.SuccessMessage "OK"
+// @Failure 400 {object} models.ErrorMessage "Invalid JSON data"
+// @Failure 404 {object} models.ErrorMessage "User not found"
+// @Failure 500 {object} models.ErrorMessage "Failed to update user"
+// @Router  /users/caption/{id} [post]
 func AddCaption(c *gin.Context) {
 	userID := c.Param("id")
 
@@ -18,9 +31,7 @@ func AddCaption(c *gin.Context) {
 		return
 	}
 
-	var captionData struct {
-		Caption string `json:"caption"`
-	}
+	var captionData models.CaptionData
 	if err := c.BindJSON(&captionData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON data"})
 		return
@@ -32,5 +43,5 @@ func AddCaption(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Caption updated successfully", "user": user})
+	c.JSON(http.StatusOK, gin.H{"message": "Caption updated successfully"})
 }

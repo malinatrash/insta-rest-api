@@ -15,6 +15,56 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/session": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "Получить пользователя по имени пользователя и паролю",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Имя пользователя",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Пароль",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SessionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/users/": {
             "get": {
                 "produces": [
@@ -75,6 +125,65 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/caption/{id}": {
+            "post": {
+                "description": "Этот эндпоинт позволяет добавлять или обновлять описание пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Добавляет или обновляет описание пользователя.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные для обновления подписи",
+                        "name": "models.captionData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CaptionData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SuccessMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid JSON data",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to update user",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/users/login": {
             "get": {
                 "consumes": [
@@ -86,19 +195,12 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Получить пользователя по имени пользователя и паролю",
+                "summary": "Получить пользователя по id сессии",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Имя пользователя",
-                        "name": "username",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Пароль",
-                        "name": "password",
+                        "description": "id сессии",
+                        "name": "session",
                         "in": "query",
                         "required": true
                     }
@@ -264,10 +366,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.CaptionData": {
+            "type": "object",
+            "properties": {
+                "caption": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ErrorMessage": {
             "type": "object",
             "properties": {
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SessionResponse": {
+            "type": "object",
+            "properties": {
+                "session": {
                     "type": "string"
                 }
             }

@@ -21,28 +21,17 @@ func CreateSession(user models.User) models.Session {
 	return session
 }
 
-// GetUserByUsernameAndPassword возвращает пользователя по имени пользователя и паролю
+// GetSessionByUsernameAndPassword возвращает id Сессии по имени пользователя и паролю
 // @Summary Получить пользователя по имени пользователя и паролю
-// @Tags users
+// @Tags sessions
 // @Accept json
 // @Produce json
 // @Param username query string true "Имя пользователя"
 // @Param password query string true "Пароль"
-// @Success 200 {object} models.User
+// @Success 200 {object} models.SessionResponse
 // @Failure 400 {object} models.ErrorMessage
 // @Failure 404 {object} models.ErrorMessage
-// @Router /users/login [get]
-// GetUserByUsernameAndPassword возвращает пользователя по имени пользователя и паролю
-// @Summary Получить пользователя по имени пользователя и паролю
-// @Tags users
-// @Accept json
-// @Produce json
-// @Param username query string true "Имя пользователя"
-// @Param password query string true "Пароль"
-// @Success 200 {object} models.User
-// @Failure 400 {object} models.ErrorMessage
-// @Failure 404 {object} models.ErrorMessage
-// @Router /users/login [get]
+// @Router /session [get]
 func GetSessionByUsernameAndPassword(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
@@ -75,7 +64,7 @@ func GetSessionByUsernameAndPassword(c *gin.Context) {
 		database.DB.Delete(&session)
 		newSession := CreateSession(user)
 		database.DB.Create(&newSession)
-		c.JSON(http.StatusOK, newSession.Session)
+		c.JSON(http.StatusOK, gin.H{"session": newSession.Session})
 	}
 
 }
