@@ -22,7 +22,7 @@ func CreateSession(user models.User) models.Session {
 }
 
 // GetSessionByUsernameAndPassword возвращает id Сессии по имени пользователя и паролю
-// @Summary Получить пользователя по имени пользователя и паролю
+// @Summary Получить id Сессии по имени пользователя и паролю
 // @Tags sessions
 // @Accept json
 // @Produce json

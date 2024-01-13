@@ -26,7 +26,7 @@ const docTemplate = `{
                 "tags": [
                     "sessions"
                 ],
-                "summary": "Получить пользователя по имени пользователя и паролю",
+                "summary": "Получить id Сессии по имени пользователя и паролю",
                 "parameters": [
                     {
                         "type": "string",

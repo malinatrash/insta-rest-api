@@ -72,7 +72,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/models.ErrorMessage'
-      summary: Получить пользователя по имени пользователя и паролю
+      summary: Получить id Сессии по имени пользователя и паролю
       tags:
       - sessions
   /users/:
