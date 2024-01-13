@@ -8,5 +8,4 @@ docs:
 
 go:
 	swag init -g cmd/app/main.go
-	go run cmd/app/main.go migrate
-	swag init -g cmd/app/main.go
+	go run cmd/app/main.go
