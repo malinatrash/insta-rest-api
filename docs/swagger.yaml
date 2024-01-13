@@ -35,7 +35,7 @@ definitions:
       username:
         type: string
     type: object
-host: 92.51.45.202:8000
+host: 0.0.0.0:8000
 info:
   contact: {}
   description: Веб сервер для нашего клона инсты

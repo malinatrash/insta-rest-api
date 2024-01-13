@@ -5,14 +5,14 @@ import (
 	_ "github.com/malinatrash/insta-rest-api/docs"
 	"github.com/malinatrash/insta-rest-api/internal/config"
 	"github.com/malinatrash/insta-rest-api/internal/database"
+	"github.com/malinatrash/insta-rest-api/internal/migrations"
 	"github.com/malinatrash/insta-rest-api/internal/routers"
-	"github.com/malinatrash/insta-rest-api/internal/utils"
 )
 
 // @title           insta REST API
 // @version         0.0.1
 // @description     Веб сервер для нашего клона инсты
-// @host      92.51.45.202:8000
+// @host      0.0.0.0:8000
 // @BasePath  /
 
 func main() {
@@ -21,14 +21,14 @@ func main() {
 		panic("Failed to connect to database!")
 	}
 
-	utils.MakeMigrations()
+	migrations.MakeMigrations()
 
 	router := gin.Default()
 
 	config.SetupCORS(router)
 
 	routers.SetupRoutes(router)
-	if err := router.Run("0.0.0.0:8000"); err != nil {
+	if err := router.Run(":8000"); err != nil {
 		panic(err)
 	}
 }
