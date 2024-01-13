@@ -1,10 +1,7 @@
-.PHONY: run migrate docs go
+.PHONY: run docs go
 
 run:
 	go run cmd/app/main.go
-
-migrate:
-	go run cmd/app/main.go migrate
 
 docs:
 	swag init -g cmd/app/main.go
