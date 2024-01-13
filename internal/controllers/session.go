@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"github.com/malinatrash/insta-rest-api/internal/database"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/malinatrash/insta-rest-api/database"
-	"github.com/malinatrash/insta-rest-api/models"
+	"github.com/malinatrash/insta-rest-api/internal/models"
 	"github.com/oklog/ulid/v2"
 )
 

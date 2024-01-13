@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/malinatrash/insta-rest-api/database"
-	"github.com/malinatrash/insta-rest-api/models"
+	"github.com/malinatrash/insta-rest-api/internal/database"
+	"github.com/malinatrash/insta-rest-api/internal/models"
 )
 
 func MakeMigrations() {

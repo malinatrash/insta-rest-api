@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
 func findFileByNameWithoutExtension(directoryPath, fileName string) (string, error) {
 	files, err := os.ReadDir(directoryPath)
 	if err != nil {
@@ -37,12 +35,12 @@ func GetImageForUser(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "username required"})
 		return
 	}
-	
+
 	foundImagePath, err := findFileByNameWithoutExtension(imagePath, imageName)
 
 	if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Image not found"})
-			return
+		c.JSON(http.StatusNotFound, gin.H{"error": "Image not found"})
+		return
 	}
 
 	c.File(foundImagePath)
@@ -50,26 +48,26 @@ func GetImageForUser(c *gin.Context) {
 func UploadImageForUser(c *gin.Context) {
 	file, err := c.FormFile("image")
 	if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Image not found in request"})
-			return
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image not found in request"})
+		return
 	}
 
 	username := c.PostForm("username")
 	if username == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Username not provided"})
-			return
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Username not provided"})
+		return
 	}
 
 	imagePath := "./assets/" + username + filepath.Ext(file.Filename)
 
 	if err := deleteFileByNameWithoutExtension("./assets/", username); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete existing image"})
-			return
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete existing image"})
+		return
 	}
 
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
-			return
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Image uploaded successfully"})
@@ -78,20 +76,18 @@ func UploadImageForUser(c *gin.Context) {
 func deleteFileByNameWithoutExtension(directoryPath, fileName string) error {
 	files, err := os.ReadDir(directoryPath)
 	if err != nil {
-			return err
+		return err
 	}
 
 	for _, file := range files {
-			nameWithoutExt := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
-			if nameWithoutExt == fileName {
-					err := os.Remove(filepath.Join(directoryPath, file.Name()))
-					if err != nil {
-							return err
-					}
+		nameWithoutExt := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+		if nameWithoutExt == fileName {
+			err := os.Remove(filepath.Join(directoryPath, file.Name()))
+			if err != nil {
+				return err
 			}
+		}
 	}
 
 	return nil
 }
-
-

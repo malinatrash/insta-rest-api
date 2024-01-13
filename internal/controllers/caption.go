@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"github.com/malinatrash/insta-rest-api/internal/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/malinatrash/insta-rest-api/database"
 	_ "github.com/malinatrash/insta-rest-api/docs"
-	"github.com/malinatrash/insta-rest-api/models"
+	"github.com/malinatrash/insta-rest-api/internal/models"
 )
 
 // AddCaption добавляет или обновляет описание пользователя.

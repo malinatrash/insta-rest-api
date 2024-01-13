@@ -3,11 +3,11 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"github.com/malinatrash/insta-rest-api/internal/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/malinatrash/insta-rest-api/database"
-	"github.com/malinatrash/insta-rest-api/models"
+	"github.com/malinatrash/insta-rest-api/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -94,7 +94,10 @@ func GetUserByID(c *gin.Context) {
 // @Router /users/ [post]
 func CreateUser(c *gin.Context) {
 	var newUser models.User
-	c.BindJSON(&newUser)
+	err := c.BindJSON(&newUser)
+	if err != nil {
+		return
+	}
 
 	var existingUser models.User
 	if err := database.DB.Where("username = ?", newUser.Username).First(&existingUser).Error; err == nil {

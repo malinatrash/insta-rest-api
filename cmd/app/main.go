@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/malinatrash/insta-rest-api/config"
-	"github.com/malinatrash/insta-rest-api/database"
 	_ "github.com/malinatrash/insta-rest-api/docs"
-	"github.com/malinatrash/insta-rest-api/routers"
-	"github.com/malinatrash/insta-rest-api/utils"
+	"github.com/malinatrash/insta-rest-api/internal/config"
+	"github.com/malinatrash/insta-rest-api/internal/database"
+	"github.com/malinatrash/insta-rest-api/internal/routers"
+	"github.com/malinatrash/insta-rest-api/internal/utils"
 )
 
 // @title           insta REST API
