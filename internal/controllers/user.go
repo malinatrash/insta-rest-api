@@ -23,7 +23,7 @@ func GetAllUsers(c *gin.Context) {
 	c.JSON(200, users)
 }
 
-// GetUserByUsernameAndPassword возвращает пользователя по id сессии
+// GetUserBySession возвращает пользователя по id сессии
 // @Summary Получить пользователя по id сессии
 // @Tags users
 // @Accept json
