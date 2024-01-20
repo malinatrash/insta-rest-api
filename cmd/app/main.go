@@ -16,8 +16,7 @@ import (
 // @BasePath  /
 
 func main() {
-	_, err := database.ConnectDB(config.DB_HOST, config.DB_USER, config.DB_PASSWORD, config.DB_NAME)
-	if err != nil {
+	if _, err := database.ConnectDB(config.DB_HOST, config.DB_USER, config.DB_PASSWORD, config.DB_NAME); err != nil {
 		panic("Failed to connect to database!")
 	}
 
